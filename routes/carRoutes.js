@@ -18,6 +18,25 @@ carRouter.get("/:id",async(req,res)=>{
     }
 })
 
+carRouter.get("/search", async (req, res) => {
+    const { q } = req.query;
+    const title = {};
+    const color = {};
+    const price = {};
+    if (q) {
+      title.title = new RegExp(q, "i");
+      color.color = new RegExp(q, "i");
+      price.price = new RegExp(q, "i");
+    }
+    const query = { $or: [title, color, price] };
+    try {
+      const data = await DataModel.find(query);
+      res.send(data);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
 module.exports = {
     carRouter
 }
